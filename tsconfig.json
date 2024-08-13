@@ -1,18 +1,20 @@
 {
-  "include": [
+    "include": [
       "./src/**/*"
-  ],
-  "compilerOptions": {
+    ],
+    "compilerOptions": {
       "strict": true,
       "esModuleInterop": true,
       "lib": [
-          "dom",
-          "es2015"
+        "dom",
+        "es2015"
       ],
       "jsx": "react-jsx",
       "target": "es5",
       "module": "commonjs",
       "moduleResolution": "node",
       "outDir": "build",
+      "allowSyntheticDefaultImports": true,
+      "noImplicitAny": false
+    }
   }
-}

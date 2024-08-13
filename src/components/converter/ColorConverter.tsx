@@ -10,15 +10,15 @@ export const ColorConverter = ({ onColorChange }: ColorConverterProps) => {
 
   const [value, setValue] = useState("");
   const [result, setResult] = useState("");
+  const regex: RegExp = /^#.{6}$/;
+  const rgbErrorColor: string = `RGB(${255}, ${0}, ${0})`;
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputData: string | null = (e.nativeEvent as InputEvent).data ?? "";
-    setValue(value + inputData);
-  };
-
-  const handleBackspace = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace") {
-      setValue(value.slice(0, -1));
+    const inputValue: string = e.target.value;
+    if (regex.test(inputValue)) {
+      setValue(inputValue);
+    } else {
+      setValue("");
     }
   };
 
@@ -31,33 +31,30 @@ export const ColorConverter = ({ onColorChange }: ColorConverterProps) => {
   };
 
   const errorColor = () => {
-    const rgbValue: string = `RGB(${255}, ${0}, ${0})`;
     setResult("Ошибка!");
-    onColorChange(rgbValue);
+    onColorChange(rgbErrorColor);
   };
 
   useEffect(() => {
     if (value.length === 7) {
       const rgbValue: string = hexToRgb(value);
-      if (rgbValue.includes("NaN")) {
-        errorColor();
-      } else {
-        setResult(rgbValue);
-        onColorChange(rgbValue);
-      };
-
+      setResult(rgbValue);
+      onColorChange(rgbValue);
     } else {
       errorColor();
     };
   }, [value]);
 
   const handleBackground = () => {
-    return result;
+    if (regex.test(value)) {
+      return result;
+    };
+    return rgbErrorColor;
   };
 
   return (
     <div className="container">
-      <input type="text" onInput={handleInput} onKeyDown={handleBackspace}/>
+      <input type="text" onInput={handleInput} />
       <input style={{ background: handleBackground() }} type="text" value={result} readOnly />
     </div>
   );
